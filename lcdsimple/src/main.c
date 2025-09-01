@@ -13,6 +13,9 @@
 #include <sys/ioctl.h>
 #include "ui_common.h"
 
+#include "gui_guider.h"
+
+lv_ui guider_ui;
 #define DISP_BUF_SIZE (32*2048)
 
 lv_timer_t *timer;
@@ -103,8 +106,9 @@ int main(void)
     lv_indev_set_cursor(mouse_indev, cursor_obj);             /*Connect the image  object to the driver*/
 	#endif
 
-
-	lv_ui_entry();
+  setup_ui(&guider_ui);
+  setup_scr_screen(&guider_ui);
+	// lv_ui_entry();
   timer = lv_timer_create(my_timer, 2000, NULL);
 
     /*Handle LitlevGL tasks (tickless mode)*/

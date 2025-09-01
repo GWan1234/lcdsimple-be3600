@@ -11,9 +11,11 @@ BIN = lcdsimple
 
 #Collect the files to compile
 MAINSRC = ./main.c ./fetch_data.c cJSON.c cJSON_Utils.c
+CFLAGS2 = "-I$(LVGL_DIR)/lvgl/src"
 
 include $(LVGL_DIR)/lvgl/lvgl.mk
 include $(LVGL_DIR)/lv_drivers/lv_drivers.mk
+include $(LVGL_DIR)/ui/generated/generated.mk
 
 CSRCS +=$(LVGL_DIR)/mouse_cursor_icon.c \
 		$(LVGL_DIR)/home_scr.c \
@@ -21,6 +23,8 @@ CSRCS +=$(LVGL_DIR)/mouse_cursor_icon.c \
 		$(LVGL_DIR)/top_layer.c \
 		$(LVGL_DIR)/ui_common.c \
 		$(LVGL_DIR)/ui_entry.c
+
+CSRCS += ${GEN_CSRCS}
 
 OBJEXT ?= .o
 
@@ -37,7 +41,7 @@ OBJS = $(AOBJS) $(COBJS)
 all: default
 
 %.o: %.c
-	@$(CC)  $(CFLAGS) -c $< -o $@
+	@$(CC)  $(CFLAGS) $(CFLAGS2) -c $< -o $@
 	@echo "CC $<"
     
 default: $(AOBJS) $(COBJS) $(MAINOBJ)
