@@ -53,26 +53,26 @@ int main(void)
       }
       sleep(3);
     }
-
     /*LittlevGL init*/
     lv_init();
 
     /*Linux frame buffer device init*/
     fbdev_init();
 
-    //int width = LV_HOR_RES;
-    //int height = LV_VER_RES;
     //printf("HDMI Resolution: %dx%d, %dx%d\n", width, height, LV_HOR_RES, LV_VER_RES);
-    disp_hor = width; 
-    disp_ver = height;
-    printf("width=%d,height=%d\n", width, height);
 
     /*A small buffer for LittlevGL to draw the screen's content*/
     static lv_color_t sbuf0[DISP_BUF_SIZE], sbuf1[DISP_BUF_SIZE];
-    char *buf0 = sbuf0, *buf1 = sbuf1;;
-    if(width > 2048) {
-      buf0 = malloc(32*width);
-      buf1 = malloc(32*width);
+    char *buf0 = sbuf0, *buf1 = sbuf1;
+    int maxDisp;
+    if (width > height) {
+      maxDisp = width;
+    } else {
+      maxDisp = height;
+    }
+    if(maxDisp > 2048) {
+      buf0 = malloc(32*maxDisp);
+      buf1 = malloc(32*maxDisp);
     }
 
     /*Initialize a descriptor for the buffer*/
@@ -86,7 +86,23 @@ int main(void)
     disp_drv.flush_cb   = fbdev_flush;
     disp_drv.hor_res    = width;
     disp_drv.ver_res    = height;
-    lv_disp_drv_register(&disp_drv);
+
+    /* disp_drv.rotated = LV_DISP_ROT_270;
+    if(disp_drv.rotated == LV_DISP_ROT_90 || disp_drv.rotated == LV_DISP_ROT_270) {
+        disp_drv.hor_res = height;
+        disp_drv.ver_res = width;
+        disp_hor = height; 
+        disp_ver = width;
+    } else {
+        disp_hor = width; 
+        disp_ver = height;
+    } */
+
+    disp_hor = height; 
+    disp_ver = width;
+    printf("disp_hor=%d,disp_ver=%d\n", disp_hor, disp_ver);
+    lv_disp_t* disp = lv_disp_drv_register(&disp_drv);
+    lv_disp_set_rotation(disp, LV_DISP_ROT_90);
 
 #if USE_EVDEV == 1
     evdev_init();
@@ -143,8 +159,8 @@ uint32_t custom_tick_get(void)
 static void my_timer(lv_timer_t * _x)
 {
   (void)(_x);
-  monitor_info_t *info = get_monitor_info();
-  update_by_monitor(info);
+  //monitor_info_t *info = get_monitor_info();
+  //update_by_monitor(info);
 }
 
 static void update_by_monitor(monitor_info_t *info) 
@@ -153,11 +169,11 @@ static void update_by_monitor(monitor_info_t *info)
   int height = disp_ver;
   int ret;
   if(info->request_cnt % 5 == 0) {
-    get_fb_info(&width, &height);
+    /* get_fb_info(&width, &height);
     if(disp_hor != width || disp_ver != height) {
       exit(1);
       return;
-    }
+    } */
     ret = read_info_from_shell(1);
   } else {
     ret = read_info_from_shell(0);
