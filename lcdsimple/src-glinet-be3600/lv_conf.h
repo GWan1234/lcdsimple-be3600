@@ -401,7 +401,7 @@
 
 /* VG-Lite Simulator */
 /*Requires: LV_USE_THORVG_INTERNAL or LV_USE_THORVG_EXTERNAL */
-#define LV_USE_VG_LITE_THORVG  1
+#define LV_USE_VG_LITE_THORVG  0
 
 #if LV_USE_VG_LITE_THORVG
 
@@ -634,7 +634,7 @@
 
 #define LV_USE_LIST       1
 
-#define LV_USE_LOTTIE     0
+#define LV_USE_LOTTIE     1
 
 #define LV_USE_MENU       1
 
