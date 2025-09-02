@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define DISP_BUF_SIZE (76*284)
+
 static const char *getenv_default(const char *name, const char *dflt)
 {
     return getenv(name) ? : dflt;
@@ -16,6 +18,13 @@ static void lv_linux_disp_init(void)
 {
     const char *device = getenv_default("LV_LINUX_FBDEV_DEVICE", "/dev/fb0");
     lv_display_t * disp = lv_linux_fbdev_create();
+
+    static lv_color_t sbuf0[DISP_BUF_SIZE], sbuf1[DISP_BUF_SIZE];
+    lv_display_set_buffers(disp,
+         sbuf0,
+         sbuf1,
+         DISP_BUF_SIZE*sizeof(lv_color_t), 
+         LV_DISPLAY_RENDER_MODE_PARTIAL);
 
     lv_display_set_physical_resolution(disp, 76, 284);
     lv_linux_fbdev_set_file(disp, device);
@@ -57,7 +66,7 @@ void btn_event_cb(lv_event_t * e) {
     lv_label_set_text(label, "Button Clicked!");
 }
 
-void lv_example_hello(void)
+void lv_example_001(void)
 {
     /* 创建一个基础对象作为屏幕 */
     lv_obj_t *scr = lv_screen_active();
@@ -85,10 +94,24 @@ void lv_example_hello(void)
     lv_refr_now(NULL);
 }
 
+void lv_example_002(void) { 
+    lv_obj_t * scr = lv_obj_create(NULL); 
+    lv_obj_set_size(scr, 284, 76);    
+    lv_obj_set_style_bg_color(scr, lv_color_hex(0x00FF00), LV_PART_MAIN);
+    lv_obj_set_style_bg_opa(scr, LV_OPA_COVER, LV_PART_MAIN); 
+    lv_obj_t * textarea = lv_textarea_create(scr);     
+    lv_obj_set_size(textarea, 250, 50); 
+    lv_obj_center(textarea); 
+    lv_textarea_set_text(textarea, "测试内容test_yes\n");    
+    lv_textarea_set_one_line(textarea, false); 
+    lv_textarea_set_cursor_click_pos(textarea, true); 
+    lv_scr_load(scr);
+}
+
 int main(void)
 {
     lv_init();
-
+    
     /*Linux display device init*/
     lv_linux_disp_init();
     lv_indev_init();
@@ -97,7 +120,8 @@ int main(void)
     //lv_demo_widgets();
     //lv_demo_widgets_start_slideshow();
     //lv_demo_flex_layout();
-    lv_example_hello();
+    //lv_example_001();
+    lv_example_002();
 
     /*Handle LVGL tasks*/
     while(1) {
