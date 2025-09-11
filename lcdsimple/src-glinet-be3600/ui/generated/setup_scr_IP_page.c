@@ -276,7 +276,7 @@ void setup_scr_IP_page(lv_ui *ui)
     lv_obj_set_style_shadow_width(ui->IP_page_label_7, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //The custom code of IP_page.
-    ui->curr_page = PAGE_1;
+    ui->curr_page = PAGE_2;
 
     //Update current screen layout.
     lv_obj_update_layout(ui->IP_page);

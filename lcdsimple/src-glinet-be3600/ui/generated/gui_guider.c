@@ -104,16 +104,39 @@ void init_keyboard(lv_ui *ui)
 }
 
 static void get_date(char* date, char* time);
+void scr_update_page1(lv_ui *ui, monitor_info_t* info) {
+    if('\0' == info->net_err[0]) {
+        lv_label_set_text(ui->First_page_label_6, "已联网");
+        lv_obj_clear_flag(ui->First_page_img_1, LV_OBJ_FLAG_HIDDEN);
+    } else {
+        lv_label_set_text(ui->First_page_label_6, info->net_err);
+        lv_obj_add_flag(ui->First_page_img_1, LV_OBJ_FLAG_HIDDEN);
+    }
+}
+
+void scr_update_page2(lv_ui *ui, monitor_info_t* info) {
+    
+}
+
+void scr_update_page3(lv_ui *ui, monitor_info_t* info) {
+    
+}
+
+void scr_update_page4(lv_ui *ui, monitor_info_t* info) {
+    
+}
+
 void home_scr_update(lv_ui *ui, monitor_info_t* info)
 {
     enum Page curr = ui->curr_page;
-    if (curr == PAGE_0) {
+    if (curr == PAGE_1) {
         printf("first page\n");
-    } else if(curr == PAGE_1) {
-        printf("ip page\n");
+        scr_update_page1(ui, info);
     } else if(curr == PAGE_2) {
+        printf("ip page\n");
+    } else if(curr == PAGE_3) {
         printf("net page\n");
-    } else {
+    } else if(curr == PAGE_4) {
         printf("last page\n");
     }
 }

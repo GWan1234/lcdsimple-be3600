@@ -16,10 +16,11 @@ extern "C" {
 #include "lvgl.h"
 
 enum Page {
-    PAGE_0 = 0,
+	  PAGE_NONE = 0,
     PAGE_1 = 1,
     PAGE_2 = 2,
-    PAGE_3 = 3
+    PAGE_3 = 3,
+    PAGE_4 = 4
 };
 
 typedef struct
