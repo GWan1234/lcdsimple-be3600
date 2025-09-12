@@ -32,12 +32,12 @@ TARGET_LDFLAGS += -lfreetype -ldrm
 MAKE_FLAGS += FPIC="$(FPIC)"
 
 define Package/$(PKG_NAME)/install
-	$(INSTALL_DIR) $(1)/usr/sbin $(1)/etc/assets $(1)/etc/config $(1)/etc/init.d $(1)/etc/uci-defaults
+	$(INSTALL_DIR) $(1)/usr/sbin $(1)/usr/share/gl-be3600-lcd/assets $(1)/etc/config $(1)/etc/init.d $(1)/etc/uci-defaults
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/bin/main $(1)/usr/sbin/gl-be3600-lcd-bin
 	$(INSTALL_BIN) ./files/gl-be3600-lcd.init $(1)/etc/init.d/gl-be3600-lcd
 	$(INSTALL_BIN) ./files/gl-be3600-lcd.config $(1)/etc/config/gl-be3600-lcd
 	$(INSTALL_BIN) ./files/gl-be3600-lcd.uci-default $(1)/etc/uci-defaults/gl-be3600-lcd
-	$(CP) ./files/assets/* $(1)/etc/assets/
+	$(CP) ./files/assets/* $(1)/usr/share/gl-be3600-lcd/assets
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))

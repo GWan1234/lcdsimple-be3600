@@ -15,8 +15,8 @@ extern "C" {
 
 #include "lvgl.h"
 
-#define ASSET_PATH   "/usr/share/lcdsimple/assets/"
-#define FONT_PATH   "/usr/share/lcdsimple/assets/"
+#define ASSET_PATH   "/usr/share/gl-be3600-lcd/assets/"
+#define FONT_PATH   "/usr/share/gl-be3600-lcd/assets/"
 
 extern const lv_font_t *font_shs_10b;
 extern const lv_font_t *font_shs_13b;
