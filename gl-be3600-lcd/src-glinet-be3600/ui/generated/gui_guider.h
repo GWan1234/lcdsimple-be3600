@@ -165,6 +165,8 @@ LV_FONT_DECLARE(lv_font_SourceHanSansCN_Bold_13)
 LV_FONT_DECLARE(lv_font_SourceHanSerifSC_Regular_11)
 LV_FONT_DECLARE(lv_font_SourceHanSansCN_Bold_16)
 LV_FONT_DECLARE(lv_font_SourceHanSansCN_Bold_10)
+LV_FONT_DECLARE(lv_font_SourceHanSansCN_Bold_11)
+LV_FONT_DECLARE(lv_font_SourceHanSansCN_Bold_12)
 LV_FONT_DECLARE(lv_font_SourceHanSerifSC_Regular_12)
 LV_FONT_DECLARE(lv_font_SourceHanSerifSC_Regular_10)
 
