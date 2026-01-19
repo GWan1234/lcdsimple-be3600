@@ -117,7 +117,6 @@ typedef struct
 	lv_obj_t *last_page_bar_2;
 	lv_obj_t *last_page_bar_3;
 	lv_obj_t *last_page_label_14;
-	lv_obj_t *last_page_dontouch;
 	enum Page curr_page;
 }lv_ui;
 
@@ -165,6 +164,8 @@ LV_FONT_DECLARE(lv_font_SourceHanSansCN_Bold_13)
 LV_FONT_DECLARE(lv_font_SourceHanSerifSC_Regular_11)
 LV_FONT_DECLARE(lv_font_SourceHanSansCN_Bold_16)
 LV_FONT_DECLARE(lv_font_SourceHanSansCN_Bold_10)
+LV_FONT_DECLARE(lv_font_SourceHanSansCN_Bold_11)
+LV_FONT_DECLARE(lv_font_SourceHanSansCN_Bold_12)
 LV_FONT_DECLARE(lv_font_SourceHanSerifSC_Regular_12)
 LV_FONT_DECLARE(lv_font_SourceHanSerifSC_Regular_10)
 
