@@ -9,6 +9,7 @@
 #include <sys/types.h>
 #include <fcntl.h>
 #include <string.h>
+#include <stdatomic.h>
 #include "cJSON.h"
 #include "fetch_data.h"
 #include "gui_guider.h"
@@ -22,7 +23,7 @@ lv_timer_t *timer;
 static void my_timer(lv_timer_t * _x);
 static void screen_idle_timer(lv_timer_t * _x);
 static lv_display_t *g_disp = NULL;
-static bool g_screen_blank = false;
+static atomic_bool g_screen_blank = true;
 
 static const char *getenv_default(const char *name, const char *dflt)
 {
@@ -42,28 +43,35 @@ static void sysfs_write(const char *path, const char *value)
 static void screen_set_blank(bool blank)
 {
     if(g_disp == NULL) return;
-    if(blank == g_screen_blank) return;
+    if(blank == atomic_load(&g_screen_blank)) return;
 
-    const char *blank_path = getenv_default("BE3600_FB_BLANK_PATH",
-        "/sys/devices/platform/soc/78b5000.spi/spi_master/spi0/spi0.0/graphics/fb0/blank");
     const char *backlight_path = getenv_default("BE3600_BACKLIGHT_PATH",
         "/sys/class/backlight/soc:backlight/brightness");
     const char *backlight_on = getenv_default("BE3600_BACKLIGHT_ON", "6");
     const char *backlight_off = getenv_default("BE3600_BACKLIGHT_OFF", "0");
+    const char *use_sysfs_blank = getenv_default("BE3600_USE_SYSFS_BLANK", "0");
+    const char *blank_path = getenv_default("BE3600_FB_BLANK_PATH",
+        "/sys/devices/platform/soc/78b5000.spi/spi_master/spi0/spi0.0/graphics/fb0/blank");
+    const char *blank_value_on = getenv_default("BE3600_FB_BLANK_ON", "1");
+    const char *blank_value_off = getenv_default("BE3600_FB_BLANK_OFF", "0");
 
     if(blank) {
         printf("setup first page: enter sleep\n");
         lv_linux_fbdev_set_blank(g_disp);
-        sysfs_write(blank_path, "1");
+        if(strcmp(use_sysfs_blank, "1") == 0) {
+            sysfs_write(blank_path, blank_value_on);
+        }
         sysfs_write(backlight_path, backlight_off);
     } else {
         printf("setup first page: wake up\n");
         lv_linux_fbdev_set_unblank(g_disp);
-        sysfs_write(blank_path, "0");
+        if(strcmp(use_sysfs_blank, "1") == 0) {
+            sysfs_write(blank_path, blank_value_off);
+        }
         sysfs_write(backlight_path, backlight_on);
     }
 
-    g_screen_blank = blank;
+    atomic_store(&g_screen_blank, blank);
 }
 
 static void lv_linux_disp_init(void)
@@ -120,6 +128,10 @@ static pthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;
 void *read_data_thread(void *arg) {
     int ret;
     while (1) {
+        if(atomic_load(&g_screen_blank)) {
+            usleep(1000000);
+            continue;
+        }
         monitor_info_t *info = &s_monitor_info2; 
         if(info->request_cnt % 5 == 0) { 
             ret = read_info_from_shell(info, 1); 
@@ -168,6 +180,7 @@ int main(void)
     /*Linux display device init*/
     lv_linux_disp_init();
     lv_indev_init();
+    screen_set_blank(false);
 
     setup_ui(&guider_ui);
 
